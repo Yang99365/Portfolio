@@ -140,14 +140,6 @@ graph TB
 | **ScriptableObject Data-Driven** | WeaponData, EnemyData hierarchy, UpgradeData, DialogueData, AudioData |
 | **Singleton** | GameStateManager, AudioManager (minimal — 2 only) |
 | **DTO** | UpgradeCardData, ShopWeaponCardData, ShopEnhanceData, ResultData |
-| **Weighted Random** | UpgradeManager (Rarity-based cumulative weight) |
-| **TryPattern** | GoldManager.TrySpend() |
-| **Fisher-Yates Shuffle** | ShopModel inventory generation |
-| **Hysteresis** | RangerAttackState (state oscillation prevention) |
-| **Priority-based Selection** | BossChaseState (cooldown + phase routing) |
-| **MaterialPropertyBlock** | HitFlash (batching-safe per-renderer override) |
-| **FSM-driven Animation** | State.Enter() → Animator.Play() (FSM = Single Source of Truth) |
-
 ### SOLID Principles
 
 - **SRP**: PlayerHealth / ContactDamage / SpriteFlip / HitFlash 각각 단일 책임. WaveManager(전략) / EnemySpawner(전술) 분리. RunStatsTracker 통계 집계 분리
@@ -203,27 +195,6 @@ BossData SO의 `GetPhase()` 순수 함수가 HP 비율로 현재 Phase를 반환
 ```
 
 View는 데이터를 받아 표시하기만 합니다(Slider, TMP 조작). 게임 로직은 Presenter가 담당하고, Model은 순수 C# 클래스(MonoBehaviour 아님)로 데이터만 보관합니다. View와 ScriptableObject 사이에 DTO struct를 두어 의존성을 역전시켰습니다.
-
-### 4. Custom HLSL Hit Flash — MaterialPropertyBlock
-
-```csharp
-// HitFlash.cs — GC allocation: 0 per frame
-private static readonly int FlashAmountID = Shader.PropertyToID("_FlashAmount");
-
-public void Flash()
-{
-    _flashTimer = _flashDuration;  // Reset timer, no coroutine
-}
-
-private void Update()
-{
-    if (_flashTimer <= 0f) return;
-    _flashTimer -= Time.deltaTime;
-    float amount = _flashTimer / _flashDuration;
-    _mpb.SetFloat(FlashAmountID, amount);
-    _renderer.SetPropertyBlock(_mpb);
-}
-```
 
 ---
 
