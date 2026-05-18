@@ -9,6 +9,8 @@
 
 ---
 
+영어/한국어 지원
+
 ## 🎮 플레이 해보기
 
 **[▶ Itch.io에서 웹으로 플레이 (클릭)](https://yangasta.itch.io/endless-adventure)**
